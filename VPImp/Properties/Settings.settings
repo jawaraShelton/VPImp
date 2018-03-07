@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VPImp.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ImageSource" Type="System.String" Scope="User">
+      <Value Profile="(Default)">G:\My Photography\Unsorted</Value>
+    </Setting>
+    <Setting Name="ImageDestination" Type="System.String" Scope="User">
+      <Value Profile="(Default)">G:\My Photography</Value>
+    </Setting>
+    <Setting Name="ImageExtensions" Type="System.String" Scope="User">
+      <Value Profile="(Default)">JPG</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

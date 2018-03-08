@@ -87,7 +87,7 @@ namespace VPImp
 
         private void txbDst_TextChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.ImageDestination = txbSrc.Text;
+            Properties.Settings.Default.ImageDestination = txbDst.Text;
             Properties.Settings.Default.Save();
         }
     }

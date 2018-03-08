@@ -1,6 +1,5 @@
 # VPImp
 
-12345678901234567890123456789012345678901234567890123456789012345678901234567890
 Visual Photo IMPorter--VPImp--is exactly what it's advertised to be on the tin--
 a photo import tool. More important: It's the Winforms answer to PImp--the 
 command line photo import tool I created.

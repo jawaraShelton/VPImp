@@ -41,26 +41,27 @@ namespace VPImp
         public DateTime? DateTaken(String fNym)
         {
             Regex r = new Regex(":");
-            string dateTaken = "";
+            String dateTaken = "";
+            DateTime retval;
 
             using (FileStream fs = new FileStream(fNym, FileMode.Open, FileAccess.Read))
             using (Image myImage = Image.FromFile(fNym))
             {
-                PropertyItem propItem;
-
                 try
                 {
-                    propItem = myImage.GetPropertyItem(0x9003);
+                    PropertyItem propItem = myImage.GetPropertyItem(0x9003);
                     dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
                 }
                 catch
                 {
                     dateTaken = "2/19/1936";
                 }
-                Console.WriteLine(dateTaken);
-
             }
-            return DateTime.Parse(dateTaken);
+
+            if (DateTime.TryParse(dateTaken, out retval))
+                return retval;
+            else
+                return DateTime.Parse("2/19/1936");
         }
     }
 }

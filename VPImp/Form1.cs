@@ -41,32 +41,21 @@ namespace VPImp
             
             String exts = Properties.Settings.Default.ImageExtensions;
             String[] folders = Directory.GetDirectories(src);
+            String[] files = Directory.GetFiles(src);
 
             foreach (string nbcLock in folders)
                 PImp(nbcLock, dst);
-
-            toolStripStatusLabel1.Text = "Reading in file list for " + src;
-            statusStrip1.Refresh();
-            String[] files = Directory.GetFiles(src);
-
-            toolStripStatusLabel1.Text = "Importing Images...";
-            statusStrip1.Refresh();
 
             foreach (string nbcLock in files)
                 if (exts.Contains(nbcLock.Substring(nbcLock.Length - 3, 3).ToUpper()))
                 {
                     DateTime? d = DateTaken(nbcLock);
-
                     String imageSortFolder = dst + "\\" + d.Value.Year.ToString() + "." + d.Value.Month.ToString("00") + "." + d.Value.Day.ToString("00");
+
+                    UpdatePolaroidWindow(nbcLock);
+
                     if (!Directory.Exists(imageSortFolder))
                         Directory.CreateDirectory(imageSortFolder);
-
-                    String cOut = (nbcLock + " => " + imageSortFolder + "\\" + Path.GetFileName(nbcLock));
-                    if (cOut.Length > 118)
-                        cOut = cOut.Substring(0, 118);
-
-                    toolStripStatusLabel2.Text = cOut;
-                    statusStrip1.Refresh();
 
                     try
                     {
@@ -78,20 +67,30 @@ namespace VPImp
                     }
                 }
 
-            Console.WriteLine("Checking to see if Folder is now empty...");
-            if (IsEmpty(src))
-            {
-                toolStripStatusLabel1.Text = "Folder is empty. Deleting.";
-                statusStrip1.Refresh();
-
-                Directory.Delete(src);
-            }
-
-            pictureBox1.Image = null;
-            pictureBox1.Refresh();
+            DeleteIfEmpty(src);
+            WipePolaroidWindow();
 
             toolStripStatusLabel1.Text = "Import Complete.";
             statusStrip1.Refresh();
+        }
+
+        private void WipePolaroidWindow()
+        {
+            pictureBox1.Image = null;
+            pictureBox1.Refresh();
+        }
+
+        private Boolean DeleteIfEmpty(String src)
+        {
+            Boolean retval = false;
+
+            if (IsEmpty(src))
+            {
+                Directory.Delete(src);
+                retval = true;
+            }
+
+            return retval;
         }
 
         private static String Renamed(String nbcLock)
@@ -109,6 +108,27 @@ namespace VPImp
             return ((Directory.GetFiles(targetDirectory).Length + Directory.GetDirectories(targetDirectory).Length) == 0);
         }
 
+        public Boolean UpdatePolaroidWindow(String fNym)
+        {
+            Boolean retval = false;
+            try
+            {
+                using (Image myImage = Image.FromFile(fNym))
+                {
+                    pictureBox1.Image = myImage;
+                    pictureBox1.Refresh();
+                }
+
+                retval = true;
+            }
+            catch
+            {
+                retval = false;
+            }
+
+            return retval;
+        }
+
         public DateTime? DateTaken(String fNym)
         {
             Regex r = new Regex(":");
@@ -117,9 +137,6 @@ namespace VPImp
             using (FileStream fs = new FileStream(fNym, FileMode.Open, FileAccess.Read))
             using (Image myImage = Image.FromFile(fNym))
             {
-                pictureBox1.Image = myImage;
-                pictureBox1.Refresh();
-
                 PropertyItem propItem;
 
                 try
@@ -132,8 +149,8 @@ namespace VPImp
                     dateTaken = "2/19/1936";
                 }
                 Console.WriteLine(dateTaken);
-            }
 
+            }
             return DateTime.Parse(dateTaken);
         }
 
@@ -176,6 +193,18 @@ namespace VPImp
                 Properties.Settings.Default.ImageDestination = foldername;
                 Properties.Settings.Default.Save();
             }
+        }
+
+        private void txbSrc_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ImageSource = txbSrc.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        private void txbDst_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ImageDestination = txbSrc.Text;
+            Properties.Settings.Default.Save();
         }
     }
 }

@@ -103,6 +103,7 @@
             this.txbSrc.Name = "txbSrc";
             this.txbSrc.Size = new System.Drawing.Size(202, 20);
             this.txbSrc.TabIndex = 4;
+            this.txbSrc.TextChanged += new System.EventHandler(this.txbSrc_TextChanged);
             // 
             // txbDst
             // 
@@ -110,6 +111,7 @@
             this.txbDst.Name = "txbDst";
             this.txbDst.Size = new System.Drawing.Size(202, 20);
             this.txbDst.TabIndex = 5;
+            this.txbDst.TextChanged += new System.EventHandler(this.txbDst_TextChanged);
             // 
             // label1
             // 

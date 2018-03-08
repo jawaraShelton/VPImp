@@ -18,6 +18,7 @@ namespace VPImp
                 PImp(nbcLock, dst);
 
             foreach (string nbcLock in files)
+            {
                 if (exts.Contains(nbcLock.Substring(nbcLock.Length - 3, 3).ToUpper()))
                 {
                     DateTime? d = DateTaken(nbcLock);
@@ -37,6 +38,9 @@ namespace VPImp
                         File.Move(nbcLock, imageSortFolder + "\\" + Renamed(nbcLock));
                     }
                 }
+
+                Application.DoEvents();
+            }
 
             DeleteIfEmpty(src);
             WipePolaroidWindow();

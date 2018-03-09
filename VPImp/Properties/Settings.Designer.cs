@@ -49,7 +49,7 @@ namespace VPImp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("JPG")]
+        [global::System.Configuration.DefaultSettingValueAttribute("JPG|CR2")]
         public string ImageExtensions {
             get {
                 return ((string)(this["ImageExtensions"]));

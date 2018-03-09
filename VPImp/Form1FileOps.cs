@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using System.Text.RegularExpressions;
-using System.Drawing.Imaging;
+using System.Collections.Generic;
+
+using MetadataExtractor;
 
 namespace VPImp
 {
@@ -16,7 +15,7 @@ namespace VPImp
 
             if (IsEmpty(src))
             {
-                Directory.Delete(src);
+                System.IO.Directory.Delete(src);
                 retval = true;
             }
 
@@ -35,30 +34,28 @@ namespace VPImp
 
         private static Boolean IsEmpty(String targetDirectory)
         {
-            return ((Directory.GetFiles(targetDirectory).Length + Directory.GetDirectories(targetDirectory).Length) == 0);
+            return ((System.IO.Directory.GetFiles(targetDirectory).Length + System.IO.Directory.GetDirectories(targetDirectory).Length) == 0);
         }
 
         public DateTime? DateTaken(String fNym)
         {
-            Regex r = new Regex(":");
-            String dateTaken = "";
+            String nbcLock = "2/19/1936";
             DateTime retval;
 
-            using (FileStream fs = new FileStream(fNym, FileMode.Open, FileAccess.Read))
-            using (Image myImage = Image.FromFile(fNym))
+            try
             {
-                try
-                {
-                    PropertyItem propItem = myImage.GetPropertyItem(0x9003);
-                    dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
-                }
-                catch
-                {
-                    dateTaken = "2/19/1936";
-                }
+                IEnumerable<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(fNym);
+                foreach (var directory in directories)
+                    foreach (var tag in directory.Tags)
+                        if (directory.Name == "Exif IFD0" && tag.TagName == "Date/Time")
+                            nbcLock = tag.Description.Substring(0, 11).Replace(':', '-') + tag.Description.Substring(11);
+            }
+            catch
+            {
+               
             }
 
-            if (DateTime.TryParse(dateTaken, out retval))
+            if (DateTime.TryParse(nbcLock, out retval))
                 return retval;
             else
                 return DateTime.Parse("2/19/1936");

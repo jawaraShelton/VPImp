@@ -39,7 +39,8 @@ namespace VPImp
 
         public DateTime? DateTaken(String fNym)
         {
-            String nbcLock = "2/19/1936";
+            String dateTaken = "2/19/1936";
+            String fileModifiedDate = "2/19/1936";
             DateTime retval;
 
             try
@@ -47,15 +48,24 @@ namespace VPImp
                 IEnumerable<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(fNym);
                 foreach (var directory in directories)
                     foreach (var tag in directory.Tags)
-                        if (directory.Name == "Exif IFD0" && tag.TagName == "Date/Time")
-                            nbcLock = tag.Description.Substring(0, 11).Replace(':', '-') + tag.Description.Substring(11);
+                    {
+                        Console.WriteLine("{0} | {1} = {2}", directory.Name, tag.TagName, tag.Description);
+                        if (directory.Name == "Exif SubIFD" && tag.TagName == "Date/Time Original")
+                            dateTaken = tag.Description.Substring(0, 11).Replace(':', '-') + tag.Description.Substring(11);
+                        if (directory.Name == "File" && tag.TagName == "File Modified Date")
+                            fileModifiedDate = DateTime.ParseExact(tag.Description, "ddd MMM dd HH:mm:ss K yyyy", null).ToString();
+
+                    }
             }
             catch
             {
                
             }
 
-            if (DateTime.TryParse(nbcLock, out retval))
+            if (dateTaken.Equals("2/19/1936"))
+                dateTaken = fileModifiedDate;
+
+            if (DateTime.TryParse(dateTaken, out retval))
                 return retval;
             else
                 return DateTime.Parse("2/19/1936");

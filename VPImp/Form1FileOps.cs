@@ -59,7 +59,9 @@ namespace VPImp
             }
             catch
             {
-               
+                //   >>>>>[ The best response here may be simply to rely on the default dates and allow the software
+                //          to place the files--which are likely corrupted/have other issues--in the directory for 
+                //          2/19/1936.
             }
 
             if (dateTaken.Equals("2/19/1936"))

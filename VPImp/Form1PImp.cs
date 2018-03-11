@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using System.IO;
 
-
 namespace VPImp
 {
     public partial class Form1 : Form
@@ -11,8 +10,8 @@ namespace VPImp
         {
 
             String exts = Properties.Settings.Default.ImageExtensions;
-            String[] folders = Directory.GetDirectories(src);
-            String[] files = Directory.GetFiles(src);
+            String[] folders = System.IO.Directory.GetDirectories(src);
+            String[] files = System.IO.Directory.GetFiles(src);
 
             foreach (string nbcLock in folders)
                 PImp(nbcLock, dst);
@@ -26,8 +25,8 @@ namespace VPImp
 
                     UpdatePolaroidWindow(nbcLock);
 
-                    if (!Directory.Exists(imageSortFolder))
-                        Directory.CreateDirectory(imageSortFolder);
+                    if (!System.IO.Directory.Exists(imageSortFolder))
+                        System.IO.Directory.CreateDirectory(imageSortFolder);
 
                     try
                     {

@@ -13,6 +13,7 @@ namespace VPImp
             {
                 using (Image myImage = Image.FromFile(fNym))
                 {
+                    pictureBox1.Image = null;
                     pictureBox1.Image = myImage;
                     pictureBox1.Refresh();
                 }

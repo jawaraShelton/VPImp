@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using System.Text.RegularExpressions;
-using System.Drawing.Imaging;
+using System.Collections.Generic;
+
+using MetadataExtractor;
 
 namespace VPImp
 {
@@ -16,7 +15,7 @@ namespace VPImp
 
             if (IsEmpty(src))
             {
-                Directory.Delete(src);
+                System.IO.Directory.Delete(src);
                 retval = true;
             }
 
@@ -35,28 +34,36 @@ namespace VPImp
 
         private static Boolean IsEmpty(String targetDirectory)
         {
-            return ((Directory.GetFiles(targetDirectory).Length + Directory.GetDirectories(targetDirectory).Length) == 0);
+            return ((System.IO.Directory.GetFiles(targetDirectory).Length + System.IO.Directory.GetDirectories(targetDirectory).Length) == 0);
         }
 
         public DateTime? DateTaken(String fNym)
         {
-            Regex r = new Regex(":");
-            String dateTaken = "";
+            String dateTaken = "2/19/1936";
+            String fileModifiedDate = "2/19/1936";
             DateTime retval;
 
-            using (FileStream fs = new FileStream(fNym, FileMode.Open, FileAccess.Read))
-            using (Image myImage = Image.FromFile(fNym))
+            try
             {
-                try
-                {
-                    PropertyItem propItem = myImage.GetPropertyItem(0x9003);
-                    dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
-                }
-                catch
-                {
-                    dateTaken = "2/19/1936";
-                }
+                IEnumerable<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(fNym);
+                foreach (var directory in directories)
+                    foreach (var tag in directory.Tags)
+                    {
+                        Console.WriteLine("{0} | {1} = {2}", directory.Name, tag.TagName, tag.Description);
+                        if (directory.Name == "Exif SubIFD" && tag.TagName == "Date/Time Original")
+                            dateTaken = tag.Description.Substring(0, 11).Replace(':', '-') + tag.Description.Substring(11);
+                        if (directory.Name == "File" && tag.TagName == "File Modified Date")
+                            fileModifiedDate = DateTime.ParseExact(tag.Description, "ddd MMM dd HH:mm:ss K yyyy", null).ToString();
+
+                    }
             }
+            catch
+            {
+               
+            }
+
+            if (dateTaken.Equals("2/19/1936"))
+                dateTaken = fileModifiedDate;
 
             if (DateTime.TryParse(dateTaken, out retval))
                 return retval;

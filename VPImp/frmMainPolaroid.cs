@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace VPImp
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
         public Boolean UpdatePolaroidWindow(String fNym)
         {

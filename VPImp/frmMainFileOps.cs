@@ -7,7 +7,7 @@ using MetadataExtractor;
 
 namespace VPImp
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
         private Boolean DeleteIfEmpty(String src)
         {

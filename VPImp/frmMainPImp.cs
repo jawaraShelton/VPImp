@@ -4,7 +4,7 @@ using System.IO;
 
 namespace VPImp
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
         private void PImp(String src, String dst)
         {
